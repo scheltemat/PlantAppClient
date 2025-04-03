@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\PlantAppClient.props" />
+</Project>

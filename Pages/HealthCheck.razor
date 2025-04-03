@@ -1,0 +1,45 @@
+@page "/healthcheck"
+@inject HttpClient Http
+
+<h3>API Health Check</h3>
+
+@if (isLoading)
+{
+  <p>Loading...</p>
+}
+else if (isHealthy)
+{
+  <p>The API is healthy!</p>
+}
+else
+{
+  <p>Failed to get the API health status.</p>
+}
+
+@code {
+  private bool isLoading = true;
+  private bool isHealthy;
+
+  protected override async Task OnInitializedAsync()
+  {
+    try
+    {
+      // This will call https://localhost:5000/api/ by default, no need to add '/api/' again
+      var response = await Http.GetFromJsonAsync<ApiHealthStatus>(""); // Calls /api/
+      isHealthy = response?.Message == "I am healthy";
+    }
+    catch
+    {
+      isHealthy = false;
+    }
+    finally
+    {
+      isLoading = false;
+    }
+  }
+
+  public class ApiHealthStatus
+  {
+    public string Message { get; set; }
+  }
+}
